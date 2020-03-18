@@ -29,7 +29,8 @@ class App extends Component {
       const response = await fetch('https://enrichman.github.io/covid19/world/full.json');
       const data = await response.json();
       const countryList = data.countries;
-      const countryNameList = data.countries.map((country)=> {return {name: country.name, id: country.id}});
+      const nonSortedCountryNameList = data.countries.map((country)=> {return {name: country.name, id: country.id}})
+      const countryNameList = nonSortedCountryNameList.sort((a, b) => (a.id < b.id) ? -1 :  (a.id > b.id) ? 1 : 0);
       this.setState({
         data: data,
         deaths: data.deaths,

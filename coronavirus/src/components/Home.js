@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from "react-router-dom";
-
+import './Home.css';
 class Home extends Component {
 
     constructor(props) {
@@ -11,15 +11,18 @@ class Home extends Component {
             confirmed: props.confirmed,
             recovered: props.recovered,
             selectedOption: DEFAULT_COUNTRY,
-            options: props.countryNameList
+            options: props.countryNameList,
+            isDisabledButton: true
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
     }
     handleChange(e) {
         const selectedOption = e.target.options[e.target.selectedIndex].value;
-        this.setState({selectedOption: selectedOption});
-        this.props.onSelectedCountry(selectedOption);         
+        this.setState({ selectedOption: selectedOption });
+        this.setState({ isDisabledButton: false });
+        this.props.onSelectedCountry(selectedOption);
+        
     }
     handleSubmit() {
         this.props.history.push('/country');
@@ -29,16 +32,31 @@ class Home extends Component {
         return (
             <div id="Home">
                 <section id="Summary">
-                    <p>Confirmed: {this.state.confirmed}</p>
-                    <p>Deaths: {this.state.deaths}</p>
-                    <p>Recovered: {this.state.recovered}</p>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td className="text">Confirmed: </td>
+                                <td className="data">{this.state.confirmed}</td>
+                            </tr>
+                            <tr>
+                                <td className="text">Deaths: </td>
+                                <td className="data">{this.state.deaths}</td>
+                            </tr>
+                            <tr>
+                                <td className="text">Recovered: </td>
+                                <td className="data">{this.state.recovered}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </section>
                 <section id="Selection">
-                    <p>Choose an specific country: </p>
-                    <select onChange={(e) => this.handleChange(e)}>
-                        {this.state.options.map((country, i) => (<option key={country.id} value={country.id}>{country.name}</option>))}
-                    </select>
-                    <button id="Submit" onClick={(e) => this.handleSubmit(e)}> Submit </button>
+                    <p className="description">Choose an specific country: </p>
+                    <div id="CountrySelection">
+                        <select onChange={(e) => this.handleChange(e)}>
+                            {this.state.options.map((country, i) => (<option key={country.id} value={country.id}>{country.name}</option>))}
+                        </select>
+                        <button id="Submit" disabled={this.state.isDisabledButton}onClick={(e) => this.handleSubmit(e)}> Search </button>
+                    </div>
                 </section>
             </div>
         );
